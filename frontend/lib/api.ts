@@ -37,6 +37,15 @@ interface RawReviewDetail {
   nitpick_count: number;
   issues: RawIssue[];
 }
+interface RawStats {
+  total_prs_reviewed: number;
+  total_issues_found: number;
+  by_severity: {
+    critical: number;
+    warning: number;
+    nitpick: number;
+  };
+}
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api";
 
@@ -58,15 +67,21 @@ async function safeFetch<T>(path: string, options?: RequestInit): Promise<T> {
   return response.json();
 }
 
+
 export async function getStats(): Promise<Stats> {
   try {
-    return await safeFetch<Stats>("/stats");
+    const raw = await safeFetch<RawStats>("/stats");
+    return {
+      totalReviews: raw.total_prs_reviewed,
+      totalIssues: raw.total_issues_found,
+      criticalCount: raw.by_severity.critical,
+      openRepos: 0, // not tracked by backend yet
+    };
   } catch (error) {
     console.error("Failed to fetch stats", error);
     throw error;
   }
 }
-
 export async function getReviews(): Promise<ReviewSummary[]> {
   try {
     const raw = await safeFetch<RawReview[]>("/reviews");
