@@ -2,8 +2,16 @@ import { getReviews, getStats } from "@/lib/api";
 import { ReviewList } from "@/components/reviews/ReviewList";
 import { StatCard } from "@/components/ui/StatCard";
 
-export default async function Home() {
+export const dynamic = "force-dynamic";
+
+async function loadDashboardData() {
   const [stats, reviews] = await Promise.all([getStats(), getReviews()]);
+  return { stats, reviews };
+}
+
+export default async function Home() {
+  const result = await loadDashboardData();
+  const { stats, reviews } = result;
 
   return (
     <main className="mx-auto flex min-h-screen max-w-7xl flex-col gap-8 px-4 py-6 lg:px-8">

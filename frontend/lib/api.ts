@@ -107,15 +107,21 @@ export async function getReviews(): Promise<ReviewSummary[]> {
 
 export async function getReviewById(id: string): Promise<ReviewDetail> {
   try {
-    const r = await safeFetch<RawReviewDetail>(`/reviews/${encodeURIComponent(id)}`);
+    const [r, reviews] = await Promise.all([
+      safeFetch<RawReviewDetail>(`/reviews/${encodeURIComponent(id)}`),
+      getReviews(),
+    ]);
+
+    const matchedReview = reviews.find((review) => review.id === id);
+
     return {
       id: r.pull_request_id,
-      repoName: "local",
-      prTitle: "Review",
-      prNumber: "0",
-      author: "unknown",
-      createdAt: new Date().toLocaleDateString(),
-      branch: "",
+      repoName: matchedReview?.repoName ?? "local",
+      prTitle: matchedReview?.prTitle ?? "Review",
+      prNumber: matchedReview?.prNumber ?? "0",
+      author: matchedReview?.author ?? "unknown",
+      createdAt: matchedReview?.createdAt ?? new Date().toLocaleDateString(),
+      branch: matchedReview ? "main" : "",
       summary: r.summary,
       issueCounts: {
         total: r.total_issues,

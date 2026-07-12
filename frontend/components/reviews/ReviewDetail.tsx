@@ -36,6 +36,14 @@ export function ReviewDetail({ review }: ReviewDetailProps) {
     );
   }, [filteredIssues]);
 
+  if (review.issues.length === 0) {
+    return (
+      <div className="rounded-[28px] border border-white/10 bg-[#242424] p-8 text-center text-sm text-[#A0A0A0]">
+        No issues were detected for this review yet.
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       <div className="rounded-[28px] border border-white/10 bg-[#242424] p-8 shadow-[0_16px_40px_rgba(0,0,0,0.2)]">
@@ -75,6 +83,12 @@ export function ReviewDetail({ review }: ReviewDetailProps) {
           {selectedSeverity === "all" && (
             <div className="rounded-[28px] bg-[#1A1A1A] p-5 text-sm text-[#A0A0A0]">
               Showing all issues grouped by severity. Choose a filter to narrow results.
+            </div>
+          )}
+
+          {selectedSeverity !== "all" && filteredIssues.length === 0 && (
+            <div className="rounded-[28px] border border-white/10 bg-[#242424] p-8 text-center text-sm text-[#A0A0A0]">
+              No {selectedSeverity} issues were detected for this review.
             </div>
           )}
 
