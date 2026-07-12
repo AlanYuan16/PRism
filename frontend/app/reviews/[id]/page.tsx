@@ -12,19 +12,19 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
   const review = await getReviewById(id);
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-7xl flex-col gap-8 px-4 py-6 lg:px-8">
-      <section className="space-y-3">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <main className="mx-auto flex min-h-screen max-w-7xl flex-col gap-6 px-4 py-6 lg:px-8">
+      <section className="rounded-xl border border-white/10 bg-[#1F1F1F] p-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-[#A0A0A0]">Review detail</p>
-            <h1 className="text-4xl font-semibold text-white">{review.prTitle}</h1>
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-[#8C8C8C]">Review detail</p>
+            <h1 className="mt-1 text-2xl font-semibold tracking-tight text-white">{review.prTitle}</h1>
           </div>
-          <div className="rounded-3xl border border-white/10 bg-[#242424] px-4 py-3 text-sm text-[#A0A0A0]">
-            <p className="font-semibold text-white">Repo</p>
-            <p className="mt-2">{review.repoName}</p>
+          <div className="rounded-lg border border-white/10 bg-[#151515] px-3 py-2 text-sm text-[#A0A0A0]">
+            <p className="font-medium text-white">{review.repoName}</p>
+            <p className="mt-1">PR #{review.prNumber} · {review.author}</p>
           </div>
         </div>
-        <p className="max-w-3xl text-sm leading-6 text-[#C1C1C1]">Review generated for PR #{review.prNumber} by {review.author} on branch {review.branch}.</p>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-[#A0A0A0]">Generated on branch {review.branch} with the review summary and issue list below.</p>
       </section>
 
       <ReviewDetail review={review} />

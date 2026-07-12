@@ -6,12 +6,29 @@ This is where the real prompt engineering work lives.
 """
 
 import json
+import logging
+
 import google.generativeai as genai
+from google.api_core import exceptions as google_exceptions
+
 from app.core.config import get_settings
 from app.services.diff_chunker import DiffChunk
 
+logger = logging.getLogger(__name__)
 settings = get_settings()
+
+if not settings.gemini_api_key or not settings.gemini_api_key.strip():
+    logger.error("GEMINI_API_KEY is missing or empty. Review service cannot start.")
+    raise RuntimeError("GEMINI_API_KEY is missing or empty. Set the environment variable before starting the server.")
+
 genai.configure(api_key=settings.gemini_api_key)
+
+
+class ReviewServiceError(Exception):
+    def __init__(self, status_code: int, message: str):
+        super().__init__(message)
+        self.status_code = status_code
+        self.message = message
 
 SYSTEM_PROMPT = """You are an expert software engineer performing a code review.
 Analyze the provided git diff and identify issues. Be precise and actionable.
@@ -57,13 +74,23 @@ Files in this chunk: {", ".join(chunk.files)}
 ```
 """
 
-    response = model.generate_content(
-        [SYSTEM_PROMPT, user_message],
-        generation_config=genai.GenerationConfig(
-            temperature=0.2,
-            max_output_tokens=8192,
-    ),
-    )
+    try:
+        response = model.generate_content(
+            [SYSTEM_PROMPT, user_message],
+            generation_config=genai.GenerationConfig(
+                temperature=0.2,
+                max_output_tokens=8192,
+            ),
+        )
+    except google_exceptions.ResourceExhausted as exc:
+        logger.warning("Gemini review quota exceeded: %s", exc)
+        raise ReviewServiceError(429, "Review service is temporarily unavailable due to quota limits.") from exc
+    except google_exceptions.NotFound as exc:
+        logger.warning("Gemini model unavailable: %s", exc)
+        raise ReviewServiceError(502, "Review service is temporarily unavailable. Please try again later.") from exc
+    except Exception as exc:  # pragma: no cover - defensive fallback
+        logger.exception("Gemini review request failed")
+        raise ReviewServiceError(502, "Review service could not process the diff.") from exc
 
     raw_text = response.text.strip()
 

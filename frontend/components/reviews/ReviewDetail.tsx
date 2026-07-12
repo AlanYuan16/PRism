@@ -45,30 +45,28 @@ export function ReviewDetail({ review }: ReviewDetailProps) {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="rounded-[28px] border border-white/10 bg-[#242424] p-8 shadow-[0_16px_40px_rgba(0,0,0,0.2)]">
+    <div className="space-y-6">
+      <div className="rounded-xl border border-white/10 bg-[#1F1F1F] p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.24em] text-[#A0A0A0]">{review.repoName}</p>
-            <h1 className="mt-3 text-3xl font-semibold text-white">{review.prTitle}</h1>
-            <p className="mt-2 text-sm leading-6 text-[#C1C1C1]">#{review.prNumber} · {review.author} · {review.branch}</p>
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-[#8C8C8C]">Summary</p>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#C1C1C1]">{review.summary}</p>
           </div>
-          <div className="rounded-3xl bg-[#1A1A1A] px-5 py-4 text-right">
-            <p className="text-sm uppercase tracking-[0.24em] text-[#A0A0A0]">Total issues</p>
-            <p className="mt-2 text-3xl font-semibold text-white">{review.issueCounts.total}</p>
+          <div className="rounded-lg border border-white/10 bg-[#151515] px-3 py-2 text-sm text-[#A0A0A0]">
+            <p className="font-medium text-white">{review.issueCounts.total} issues</p>
+            <p className="mt-1">Across this review</p>
           </div>
         </div>
-        <p className="mt-6 max-w-3xl text-sm leading-7 text-[#D1D1D1]">{review.summary}</p>
       </div>
 
       <div className="space-y-4">
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2">
           {severityTabs.map((tab) => (
             <button
               key={tab.key}
               type="button"
               onClick={() => setSelectedSeverity(tab.key)}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+              className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
                 selectedSeverity === tab.key
                   ? "bg-[#582688] text-white"
                   : "border border-white/10 bg-[#1A1A1A] text-[#A0A0A0] hover:border-[#582688]/40 hover:text-white"
@@ -81,27 +79,27 @@ export function ReviewDetail({ review }: ReviewDetailProps) {
 
         <div className="grid gap-4">
           {selectedSeverity === "all" && (
-            <div className="rounded-[28px] bg-[#1A1A1A] p-5 text-sm text-[#A0A0A0]">
-              Showing all issues grouped by severity. Choose a filter to narrow results.
+            <div className="rounded-lg border border-white/10 bg-[#1A1A1A] p-3 text-sm text-[#8C8C8C]">
+              Grouped by severity. Choose a filter to narrow the list.
             </div>
           )}
 
           {selectedSeverity !== "all" && filteredIssues.length === 0 && (
-            <div className="rounded-[28px] border border-white/10 bg-[#242424] p-8 text-center text-sm text-[#A0A0A0]">
+            <div className="rounded-lg border border-white/10 bg-[#1F1F1F] p-8 text-center text-sm text-[#8C8C8C]">
               No {selectedSeverity} issues were detected for this review.
             </div>
           )}
 
           {selectedSeverity === "all" ? (
             (["critical", "warning", "nitpick"] as Severity[]).map((severity) => (
-              <section key={severity} className="space-y-4">
-                <div className="flex items-center justify-between gap-4 rounded-3xl bg-[#1A1A1A] px-5 py-4">
-                  <h2 className="text-lg font-semibold text-white">{severity}</h2>
-                  <span className="text-sm text-[#A0A0A0]">{groupedIssues[severity].length} issues</span>
+              <section key={severity} className="space-y-3">
+                <div className="flex items-center justify-between gap-4 rounded-lg border border-white/10 bg-[#1A1A1A] px-3 py-2.5">
+                  <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#D8D8D8]">{severity}</h2>
+                  <span className="text-sm text-[#8C8C8C]">{groupedIssues[severity].length} issues</span>
                 </div>
-                <div className="grid gap-4">
+                <div className="grid gap-3">
                   {groupedIssues[severity].length === 0 ? (
-                    <div className="rounded-3xl border border-dashed border-white/10 bg-[#242424] p-6 text-sm text-[#A0A0A0]">
+                    <div className="rounded-lg border border-dashed border-white/10 bg-[#1F1F1F] p-6 text-sm text-[#8C8C8C]">
                       No {severity} issues found.
                     </div>
                   ) : (
@@ -111,7 +109,7 @@ export function ReviewDetail({ review }: ReviewDetailProps) {
               </section>
             ))
           ) : filteredIssues.length === 0 ? (
-            <div className="rounded-[28px] border border-white/10 bg-[#242424] p-8 text-center text-sm text-[#A0A0A0]">
+            <div className="rounded-lg border border-white/10 bg-[#1F1F1F] p-8 text-center text-sm text-[#8C8C8C]">
               No {selectedSeverity} issues were detected for this review.
             </div>
           ) : (

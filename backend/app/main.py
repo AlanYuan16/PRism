@@ -1,7 +1,19 @@
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import router
+
+from app.core.config import get_settings
 from app.core.database import Base, engine
+
+logger = logging.getLogger(__name__)
+settings = get_settings()
+
+if not settings.gemini_api_key or not settings.gemini_api_key.strip():
+    logger.error("GEMINI_API_KEY is missing or empty. The application cannot start.")
+    raise RuntimeError("GEMINI_API_KEY is missing or empty. Set the environment variable before starting the server.")
+
+from app.api.routes import router
 
 # Create all tables on startup
 Base.metadata.create_all(bind=engine)

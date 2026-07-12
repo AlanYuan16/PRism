@@ -5,10 +5,22 @@ interface ReviewListProps {
   reviews: ReviewSummary[];
 }
 
+function severityAccent(review: ReviewSummary) {
+  if (review.issueCounts.critical > 0) {
+    return "border-[#FF4444]";
+  }
+
+  if (review.issueCounts.warning > 0) {
+    return "border-[#FFB800]";
+  }
+
+  return "border-[#4A9EFF]";
+}
+
 export function ReviewList({ reviews }: ReviewListProps) {
   if (reviews.length === 0) {
     return (
-      <div className="rounded-[28px] border border-white/10 bg-[#242424] p-8 text-center text-sm text-[#A0A0A0]">
+      <div className="rounded-xl border border-white/10 bg-[#1F1F1F] p-8 text-center text-sm text-[#8C8C8C]">
         No reviews found yet. Submit a diff to generate your first review.
       </div>
     );
@@ -17,39 +29,33 @@ export function ReviewList({ reviews }: ReviewListProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2">
       {reviews.map((review) => (
-        <article key={review.id} className="rounded-[28px] border border-white/10 bg-[#242424] p-6 shadow-[0_16px_40px_rgba(0,0,0,0.2)]">
+        <article key={review.id} className={`rounded-xl border border-white/10 bg-[#1F1F1F] p-5 pl-4 ${severityAccent(review)}`}>
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-[#A0A0A0]">{review.repoName}</p>
-              <h3 className="mt-3 text-lg font-semibold text-white">{review.prTitle}</h3>
-              <p className="mt-2 text-sm leading-6 text-[#C1C1C1]">#{review.prNumber} · {review.author}</p>
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-[#8C8C8C]">{review.repoName}</p>
+              <h3 className="mt-2 text-lg font-semibold text-white">{review.prTitle}</h3>
+              <p className="mt-1 text-sm leading-6 text-[#A0A0A0]">#{review.prNumber} · {review.author}</p>
             </div>
-            <div className="rounded-3xl bg-[#1A1A1A] px-3 py-2 text-right text-sm text-[#A0A0A0]">
-              <p className="text-white">{review.issueCounts.total} issues</p>
-              <p className="mt-1 text-xs">{review.createdAt}</p>
-            </div>
-          </div>
-
-          <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-3xl bg-[#1A1A1A] px-4 py-3 text-sm text-[#E4E4E4]">
-              <p className="text-xs uppercase tracking-[0.24em] text-[#A0A0A0]">Critical</p>
-              <p className="mt-2 text-lg font-semibold text-[#FF4444]">{review.issueCounts.critical}</p>
-            </div>
-            <div className="rounded-3xl bg-[#1A1A1A] px-4 py-3 text-sm text-[#E4E4E4]">
-              <p className="text-xs uppercase tracking-[0.24em] text-[#A0A0A0]">Warning</p>
-              <p className="mt-2 text-lg font-semibold text-[#FFB800]">{review.issueCounts.warning}</p>
-            </div>
-            <div className="rounded-3xl bg-[#1A1A1A] px-4 py-3 text-sm text-[#E4E4E4]">
-              <p className="text-xs uppercase tracking-[0.24em] text-[#A0A0A0]">Nitpick</p>
-              <p className="mt-2 text-lg font-semibold text-[#4A9EFF]">{review.issueCounts.nitpick}</p>
+            <div className="text-right text-sm text-[#8C8C8C]">
+              <p className="font-medium text-white">{review.issueCounts.total} issues</p>
+              <p className="mt-1">{review.createdAt}</p>
             </div>
           </div>
 
-          <Link
-            href={`/reviews/${review.id}`}
-            className="mt-6 inline-flex items-center justify-center rounded-full border border-[#582688]/20 bg-[#582688]/10 px-4 py-3 text-sm font-semibold text-[#E9D9FF] transition hover:bg-[#582688]/20"
-          >
-            View full review
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className="rounded-full border border-[#FF4444]/20 bg-[#FF4444]/10 px-2.5 py-1 text-[11px] font-medium text-[#FF9A9A]">
+              {review.issueCounts.critical} critical
+            </span>
+            <span className="rounded-full border border-[#FFB800]/20 bg-[#FFB800]/10 px-2.5 py-1 text-[11px] font-medium text-[#FFD96B]">
+              {review.issueCounts.warning} warning
+            </span>
+            <span className="rounded-full border border-[#4A9EFF]/20 bg-[#4A9EFF]/10 px-2.5 py-1 text-[11px] font-medium text-[#9FC3FF]">
+              {review.issueCounts.nitpick} nitpick
+            </span>
+          </div>
+
+          <Link href={`/reviews/${review.id}`} className="mt-5 inline-flex items-center text-sm font-medium text-[#D8C1F7] transition hover:text-white">
+            Open review →
           </Link>
         </article>
       ))}

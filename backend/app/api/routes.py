@@ -1,12 +1,43 @@
+import time
+from collections import defaultdict
+from typing import DefaultDict
+
 from fastapi import APIRouter, Depends, HTTPException, Request, BackgroundTasks
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from app.core.database import get_db
 from app.models.models import Repo, PullRequest, Issue, Severity
-from app.services.reviewer import review_diff
+from app.services.reviewer import ReviewServiceError, review_diff
 from app.services.github import verify_webhook_signature, fetch_pr_diff
 
 router = APIRouter()
+
+RATE_LIMIT_WINDOW_SECONDS = 60
+RATE_LIMIT_MAX_REQUESTS = 10
+_RATE_LIMIT_BUCKETS: DefaultDict[str, list[float]] = defaultdict(list)
+
+
+def sanitize_diff(diff: str) -> str:
+    if not diff:
+        return ""
+
+    sanitized = diff.replace("\x00", "")
+    return sanitized.encode("utf-8", errors="ignore").decode("utf-8")
+
+
+def enforce_rate_limit(request: Request) -> None:
+    client_ip = request.client.host if request.client else "unknown"
+    now = time.time()
+    timestamps = _RATE_LIMIT_BUCKETS[client_ip]
+    timestamps[:] = [timestamp for timestamp in timestamps if now - timestamp < RATE_LIMIT_WINDOW_SECONDS]
+
+    if len(timestamps) >= RATE_LIMIT_MAX_REQUESTS:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many review requests. Please wait a minute and try again.",
+        )
+
+    timestamps.append(now)
 
 
 # ── Pydantic schemas for request/response ──────────────────────────────────
@@ -99,15 +130,29 @@ def build_review_response(pr: PullRequest) -> ReviewResponse:
 # ── Routes ──────────────────────────────────────────────────────────────────
 
 @router.post("/review", response_model=ReviewResponse)
-async def manual_review(request: ManualReviewRequest, db: Session = Depends(get_db)):
+async def manual_review(
+    request: ManualReviewRequest,
+    http_request: Request,
+    db: Session = Depends(get_db),
+):
     """
     Manually submit a diff for review.
     This is how the CLI tool and the web UI submit reviews.
     """
-    if not request.diff.strip():
+    enforce_rate_limit(http_request)
+
+    sanitized_diff = sanitize_diff(request.diff)
+    if not sanitized_diff.strip():
         raise HTTPException(status_code=400, detail="Diff cannot be empty")
 
-    review_result = review_diff(request.diff)
+    if len(sanitized_diff.encode("utf-8")) > 512_000:
+        raise HTTPException(status_code=400, detail="Diff too large. Maximum size is 500KB.")
+
+    try:
+        review_result = review_diff(sanitized_diff)
+    except ReviewServiceError as exc:
+        raise HTTPException(status_code=exc.status_code, detail=exc.message) from exc
+
     pr = save_review(
         db,
         repo_name=request.repo,

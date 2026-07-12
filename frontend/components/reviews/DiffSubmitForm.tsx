@@ -34,7 +34,7 @@ export function DiffSubmitForm() {
     try {
       const response = await submitReview(formState);
       router.push(`/reviews/${response.id}`);
-    } catch  {
+    } catch {
       setError("Unable to submit diff. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -42,62 +42,62 @@ export function DiffSubmitForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 rounded-[28px] border border-white/10 bg-[#242424] p-8 shadow-[0_16px_40px_rgba(0,0,0,0.2)]">
-      <div className="grid gap-6 lg:grid-cols-2">
-        <label className="space-y-2 text-sm text-[#A0A0A0]">
-          <span className="font-semibold text-white">Repository name</span>
+    <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border border-white/10 bg-[#1F1F1F] p-5">
+      <div className="grid gap-4 lg:grid-cols-2">
+        <label className="space-y-2 text-sm text-[#9A9A9A]">
+          <span className="font-medium text-white">Repository</span>
           <input
             value={formState.repoName}
             onChange={handleChange("repoName")}
-            className="w-full rounded-3xl border border-white/10 bg-[#1A1A1A] px-4 py-3 text-sm text-white outline-none transition focus:border-[#582688]/60"
+            className="w-full rounded-lg border border-white/10 bg-[#161616] px-3 py-2.5 text-sm text-white outline-none transition focus:border-[#582688]/60 focus:ring-1 focus:ring-[#582688]/40"
             placeholder="example/repo"
           />
         </label>
-        <label className="space-y-2 text-sm text-[#A0A0A0]">
-          <span className="font-semibold text-white">PR number</span>
+        <label className="space-y-2 text-sm text-[#9A9A9A]">
+          <span className="font-medium text-white">PR number</span>
           <input
             value={formState.prNumber}
             onChange={handleChange("prNumber")}
-            className="w-full rounded-3xl border border-white/10 bg-[#1A1A1A] px-4 py-3 text-sm text-white outline-none transition focus:border-[#582688]/60"
+            className="w-full rounded-lg border border-white/10 bg-[#161616] px-3 py-2.5 text-sm text-white outline-none transition focus:border-[#582688]/60 focus:ring-1 focus:ring-[#582688]/40"
             placeholder="42"
           />
         </label>
       </div>
-      <div className="grid gap-6 lg:grid-cols-2">
-        <label className="space-y-2 text-sm text-[#A0A0A0]">
-          <span className="font-semibold text-white">PR title</span>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <label className="space-y-2 text-sm text-[#9A9A9A]">
+          <span className="font-medium text-white">PR title</span>
           <input
             value={formState.title}
             onChange={handleChange("title")}
-            className="w-full rounded-3xl border border-white/10 bg-[#1A1A1A] px-4 py-3 text-sm text-white outline-none transition focus:border-[#582688]/60"
+            className="w-full rounded-lg border border-white/10 bg-[#161616] px-3 py-2.5 text-sm text-white outline-none transition focus:border-[#582688]/60 focus:ring-1 focus:ring-[#582688]/40"
             placeholder="Improve CLI diff parsing"
           />
         </label>
-        <label className="space-y-2 text-sm text-[#A0A0A0]">
-          <span className="font-semibold text-white">Author</span>
+        <label className="space-y-2 text-sm text-[#9A9A9A]">
+          <span className="font-medium text-white">Author</span>
           <input
             value={formState.author}
             onChange={handleChange("author")}
-            className="w-full rounded-3xl border border-white/10 bg-[#1A1A1A] px-4 py-3 text-sm text-white outline-none transition focus:border-[#582688]/60"
-            placeholder="Samira K" 
+            className="w-full rounded-lg border border-white/10 bg-[#161616] px-3 py-2.5 text-sm text-white outline-none transition focus:border-[#582688]/60 focus:ring-1 focus:ring-[#582688]/40"
+            placeholder="Samira K"
           />
         </label>
       </div>
-      <label className="space-y-2 text-sm text-[#A0A0A0]">
-        <span className="font-semibold text-white">Git diff</span>
+      <label className="space-y-2 text-sm text-[#9A9A9A]">
+        <span className="font-medium text-white">Diff payload</span>
         <textarea
           value={formState.diff}
           onChange={handleChange("diff")}
           rows={12}
-          className="min-h-[320px] w-full rounded-[28px] border border-white/10 bg-[#1A1A1A] px-4 py-4 text-sm text-white outline-none transition focus:border-[#582688]/60"
+          className="min-h-[320px] w-full rounded-lg border border-white/10 bg-[#161616] px-3 py-3 font-mono text-sm text-[#E8E8E8] outline-none transition focus:border-[#582688]/60 focus:ring-1 focus:ring-[#582688]/40"
           placeholder="Paste the git diff here..."
         />
       </label>
-      {error && <div className="rounded-3xl border border-[#FF4444]/30 bg-[#3D1515] px-4 py-3 text-sm text-[#FFCCCC]">{error}</div>}
+      {error && <div className="rounded-lg border border-[#FF4444]/25 bg-[#2E1515] px-3 py-2 text-sm text-[#FFB7B7]">{error}</div>}
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex w-full items-center justify-center rounded-full bg-[#582688] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#6f3db7] disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex w-full items-center justify-center rounded-lg bg-[#582688] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#6f3db7] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? "Submitting review..." : "Submit review"}
       </button>
