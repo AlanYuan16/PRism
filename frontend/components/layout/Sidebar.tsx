@@ -7,7 +7,7 @@ const links = [
 
 export function Sidebar() {
   return (
-    <aside className="hidden w-72 shrink-0 flex-col border-r border-white/10 bg-[#141414] px-5 py-6 lg:flex">
+    <aside className="hidden w-72 shrink-0 flex-col border-r border-white/10 bg-[#141414] px-5 py-6 font-sans lg:flex">
       <div className="flex items-center gap-3 border-b border-white/10 pb-5">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#582688]/30 bg-[#582688]/15 text-sm font-semibold text-[#E9D9FF]">
           PR

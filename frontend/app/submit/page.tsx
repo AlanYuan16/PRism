@@ -2,7 +2,7 @@ import { DiffSubmitForm } from "@/components/reviews/DiffSubmitForm";
 
 export default function SubmitPage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-7xl flex-col gap-6 px-4 py-6 lg:px-8">
+    <main className="mx-auto flex min-h-screen max-w-7xl flex-col gap-6 px-4 py-6 font-sans lg:px-8">
       <section className="rounded-xl border border-white/10 bg-[#1F1F1F] p-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>

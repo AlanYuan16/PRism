@@ -13,7 +13,7 @@ const borderStyles: Record<ReviewIssue["severity"], string> = {
 
 export function IssueCard({ issue }: IssueCardProps) {
   return (
-    <article className={`rounded-xl border border-white/10 bg-[#1F1F1F] p-4 pl-3 ${borderStyles[issue.severity]}`}>
+    <article className={`rounded-xl border border-white/10 bg-[#1F1F1F] p-4 pl-3 font-sans ${borderStyles[issue.severity]}`}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
           <p className="font-mono text-xs tracking-[0.12em] text-[#8C8C8C]">

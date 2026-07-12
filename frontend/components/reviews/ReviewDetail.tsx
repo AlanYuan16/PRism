@@ -45,7 +45,7 @@ export function ReviewDetail({ review }: ReviewDetailProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans">
       <div className="rounded-xl border border-white/10 bg-[#1F1F1F] p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

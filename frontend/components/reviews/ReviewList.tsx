@@ -27,14 +27,16 @@ export function ReviewList({ reviews }: ReviewListProps) {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-4 font-sans md:grid-cols-2">
       {reviews.map((review) => (
         <article key={review.id} className={`rounded-xl border border-white/10 bg-[#1F1F1F] p-5 pl-4 ${severityAccent(review)}`}>
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-xs font-medium uppercase tracking-[0.2em] text-[#8C8C8C]">{review.repoName}</p>
               <h3 className="mt-2 text-lg font-semibold text-white">{review.prTitle}</h3>
-              <p className="mt-1 text-sm leading-6 text-[#A0A0A0]">#{review.prNumber} · {review.author}</p>
+              <p className="mt-1 text-sm leading-6 text-[#A0A0A0]">
+                <span className="font-mono">#{review.prNumber}</span> · {review.author}
+              </p>
             </div>
             <div className="text-right text-sm text-[#8C8C8C]">
               <p className="font-medium text-white">{review.issueCounts.total} issues</p>

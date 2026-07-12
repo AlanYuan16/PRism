@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-[linear-gradient(90deg,rgba(88,38,136,0.22),rgba(88,38,136,0.08))] px-4 py-4 backdrop-blur lg:px-8">
+    <header className="sticky top-0 z-20 border-b border-white/10 bg-[linear-gradient(90deg,rgba(88,38,136,0.22),rgba(88,38,136,0.08))] px-4 py-4 font-sans backdrop-blur lg:px-8">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.24em] text-[#A0A0A0]">PRism</p>

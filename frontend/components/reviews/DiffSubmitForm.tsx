@@ -42,7 +42,7 @@ export function DiffSubmitForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border border-white/10 bg-[#1F1F1F] p-5">
+    <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border border-white/10 bg-[#1F1F1F] p-5 font-sans">
       <div className="grid gap-4 lg:grid-cols-2">
         <label className="space-y-2 text-sm text-[#9A9A9A]">
           <span className="font-medium text-white">Repository</span>

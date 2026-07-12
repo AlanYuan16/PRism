@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
@@ -7,6 +7,12 @@ import { Sidebar } from "@/components/layout/Sidebar";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -21,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full bg-[#1B1B1B] text-white">
+    <html lang="en" className={`${inter.variable} ${jetBrainsMono.variable} h-full antialiased`}>
+      <body className="min-h-full bg-[#1B1B1B] font-sans text-white">
         <div className="min-h-screen bg-[#1B1B1B] text-white">
           <div className="flex min-h-screen">
             <Sidebar />
