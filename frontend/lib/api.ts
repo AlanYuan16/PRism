@@ -50,13 +50,15 @@ const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api";
 
 async function safeFetch<T>(path: string, options?: RequestInit): Promise<T> {
+  const headers = new Headers(options?.headers);
+  if (!headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
   const response = await fetch(`${BASE_URL}${path}`, {
     cache: "no-store",
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(options?.headers as Record<string, string>),
-    },
+    headers,
   });
 
   if (!response.ok) {
